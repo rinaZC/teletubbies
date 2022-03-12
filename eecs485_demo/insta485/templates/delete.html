@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>insta485</title>
+	<style>
+		.head_left_logo {
+			position:absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+		.head_right {
+			position:absolute;
+			top: 0;
+			right: 0;
+			color: black;
+			font-size: 20px;
+			font-weight: bold;
+		}
+		.post_container{
+			position: relative;
+			width: 1000px;
+			height: 1300px;
+			border: 1px solid #000;
+			left: 30%;
+			top: 150px;
+		}
+		.timestamp {
+			position: absolute;
+			top: 10px;
+			right: 18px;
+			font-size: 20px;
+		}
+		.profile_picture {
+			position: absolute;
+			top: 10px;
+			left: 18px;
+			width: 75px;
+			height:75px;
+		}
+		.profile_picture img {
+			width: 100%;
+			height: auto;
+		}
+		.username {
+			position: absolute;
+			top: 10px;
+			left: 100px;
+			font-size: 20px;
+		}
+		.actual_pic {
+			position: absolute;
+			top: 100px;
+			width: 1000px;
+			height: 300px;
+		}
+		.actual_pic img {
+			width: 100%;
+			height: auto;
+		}
+		.num_like {
+			position: absolute;
+			top: 900px;
+			left: 18px;
+			font-size: 20px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<!---Header with logo--->
+	<header>
+		<div class="head_left_logo">
+			<a href="/">logo</a>
+			</div>
+		<div class="head_right">
+			<a href="/explore/">explore</a>
+			<a href="/u/{{logname}}/">{{logname}}</a>
+			</div>
+	</header>
+    <form style="position:absolute; left:10%; top:10%" action="/accounts/?target=/accounts/create/" method="post" enctype="multipart/form-data">
+          <input type="submit" name="delete" value="confirm delete account"/>
+          <input type="hidden" name="operation" value="delete"/>
+    </form>
+</body>
+</html>

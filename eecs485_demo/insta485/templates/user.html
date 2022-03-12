@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>insta485</title>
+	<style>
+		.head_left_logo {
+			position:absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+		.head_right {
+			position:absolute;
+			top: 0;
+			right: 0;
+			color: black;
+			font-size: 20px;
+			font-weight: bold;
+		}
+
+	</style>
+</head>
+
+<body>
+
+	<!---Header with logo--->
+	<header>
+		<div class="head_left_logo">
+			<a href="/">logo</a>
+			</div>
+		<div class="head_right">
+			<a href="/explore/">explore</a>
+			<a href="/u/{{logname}}/">{{logname}}</a>
+			</div>
+	</header>
+
+
+	<!---User Page--->
+	<br><br><hr>
+	<div style="position:absolute;font-size:45px;top:10%;left:10%">
+		{{username}}
+        {% if user_own_page %}
+            <a href="/accounts/edit/">Edit profile</a>
+            <form action="/accounts/logout/" method="post" enctype="multipart/form-data">
+                <input type="submit" name="logout" value="Logout"/>
+            </form>
+        {% endif %}
+    </div>
+    <div style="position:absolute;font-size:45px;top:30%;left:18px">
+	{% if logname != username %}
+		{% if logname_follows_username %}
+			following
+            <form action="/following/?target=/u/{{ username }}/"
+                  method="post" enctype="multipart/form-data">
+              <input type="submit" name="unfollow" value="unfollow"/>
+              <input type="hidden" name="username" value="{{username}}"/>
+              <input type="hidden" name="operation" value="unfollow"/>
+            </form>
+		{% else %}
+			not following
+            <form action="/following/?target=/u/{{ username }}/"
+                  method="post" enctype="multipart/form-data">
+                <input type="submit" name="follow" value="follow"/>
+                <input type="hidden" name="username" value="{{username}}"/>
+                <input type="hidden" name="operation" value="follow"/>
+            </form>
+		{% endif %}
+	{% else %}
+
+	{% endif %}
+	</div>
+	<div style="position:absolute;font-size:25px;top:20%;left:10%">
+		{% if total_posts == 1 %}
+			{{total_posts}} post
+		{% else %}
+			{{total_posts}} posts
+		{% endif %}
+		<a href="/u/{{username}}/followers/">
+			{% if followers == 1 %}
+				{{followers}} follower
+			{% else %}
+				{{followers}} followers
+			{% endif %}
+			</a>
+		<a href="/u/{{username}}/following/">{{following}} following</a>
+		</div>
+	<div style="position:absolute;font-size:25px;top:27%;left:10%">
+		{{fullname}}
+    </div>
+
+    {% if user_own_page %}
+        <div style="position:absolute;font-size:25px;top:35%;left:10%">
+        <form action="/posts/?target=/u/{{ username }}/" method="post" enctype="multipart/form-data">
+          <input type="file" name="file" accept="image/*" required/>
+          <input type="submit" name="create_post" value="upload new post"/>
+          <input type="hidden" name="operation" value="create"/>
+        </form>
+        </div>
+    {% endif %}
+
+{% for each_post in posts %}
+	<div style="position:relative;top:750px;left:10%">
+		<div style="position:absolute;left:0;width:400px;height:300px">
+			<a href="/p/{{each_post.postid}}/"><img style="width:100%;height:auto" src="{{each_post.img_url}}" alt="{{each_post.postid}}"></a>
+        </div>
+		</div>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+{% endfor %}
+
+</body>
+</html>
