@@ -12,8 +12,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Main />}/>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/accounts/login" element={<Login />} />
+        <Route path="/accounts/create" element={<Signup />} />
         <Route path="/profile" element={<Profile />} />
 
         {/* Using path="*"" means "match anything", so this route

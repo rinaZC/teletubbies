@@ -79,7 +79,7 @@ class Login extends React.Component {
           {src: logo, width: 95, height: 95},
           null),
       React.createElement("div", { className: "title" }, "Login"),
-      React.createElement(FluidInput, { type: "text", label: "name", id: "name", style: style }),
+      React.createElement(FluidInput, { type: "username", label: "username", id: "username", style: style }),
       React.createElement(FluidInput, {
         type: "password",
         label: "password",
