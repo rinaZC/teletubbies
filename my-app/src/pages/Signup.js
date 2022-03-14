@@ -2,6 +2,14 @@ import React from 'react';
 import "./Login.css"
 import logo from '../static/images/login.png';
 
+const sign_up_json = {
+    operation: "create",
+    username: "",
+    password: "",
+    email: "",
+    favorite: ""
+};
+
 class FluidInput extends React.Component {
   constructor(props) {
     super(props);
@@ -26,6 +34,18 @@ class FluidInput extends React.Component {
   render() {
     const { type, label, style, id } = this.props;
     const { focused, value } = this.state;
+    if(id === "username") {
+        sign_up_json.username = value;
+    }
+    else if(id === "password") {
+        sign_up_json.password = value;
+    }
+    else if(id === "email") {
+        sign_up_json.email = value;
+    }
+    else if(id === "favorite") {
+        sign_up_json.favorite = value;
+    }
 
     let inputClass = "fluid-input";
     if (focused) {
@@ -56,11 +76,27 @@ class FluidInput extends React.Component {
 
 
 class Button extends React.Component {
+    handleButtonClicked(event) {
+        event.preventDefault();
+        const { url } = this.props;
+        console.log(sign_up_json);
+        fetch(`${url}accounts/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(sign_up_json),
+        })
+          .then((response) => {
+            if (!response.ok) throw Error(response.statusText);
+            return response.json();
+          })
+          .catch((error) => console.log(error));
+    }
+
   render() {
     return /*#__PURE__*/(
       React.createElement("div", {
         className: `button ${this.props.buttonClass}`,
-        onClick: this.props.onClick },
+        onClick: this.handleButtonClicked.bind(this) },
 
       this.props.buttonText));
 
@@ -79,14 +115,14 @@ class Signup extends React.Component {
           {src: logo, width: 95, height: 95},
           null),
       React.createElement("div", { className: "title" }, "Sign Up"),
-      React.createElement(FluidInput, { type: "username", label: "username", id: "username", style: style }),
+      React.createElement(FluidInput, { type: "username", label: "username", id: "username", style: style} ),
       React.createElement(FluidInput, {
         type: "password",
         label: "password",
         id: "password",
         style: style }), /*#__PURE__*/
 
-      React.createElement(FluidInput, { type: "email", label: "email", id: "email", style: style }),
+      React.createElement(FluidInput, { type: "email", label: "email", id: "email", style: style}),
       React.createElement(FluidInput, { type: "favorite", label: "favorite music genre", id: "favorite", style: style }),
       React.createElement(Button, { buttonText: "sign up", buttonClass: "login-button" }),
       React.createElement("p",{}, "Already had an account?"),
