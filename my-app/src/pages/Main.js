@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Refresh from '@mui/icons-material/Refresh';
 import AddBox from '@mui/icons-material/AddBox';
+import axios from 'axios';
 
 function TopBar() {
     return (
@@ -23,7 +24,7 @@ function TopBar() {
                 color="inherit"
               >
                 <Refresh />
-                <Typography variant="button">Refresh</Typography>
+                <Typography variant="button">Refresh My Feed</Typography>
             </IconButton>
             <IconButton
                 size="large"
@@ -45,16 +46,23 @@ function TopBar() {
     );
   }
 
-let posts = [{}, {}, {}, {}, {}]
+// let posts = [{"id": 1, "music": "<iframe style=\"border-radius:12px\" src=\"https://open.spotify.com/embed/track/0ri0Han4IRJhzvERHOZTMr?utm_source=generator\" width=\"100%\" height=\"380\" frameBorder=\"0\" allowfullscreen=\"\" allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\"></iframe>", "description": "Love this song!"}]
 
 
 export default function Main() {
+    const [posts, setPosts] = React.useState([])
+    React.useEffect(() => {
+      axios.get("/api/posts/").then((res)=>setPosts(res.data)).catch((err)=>console.log(err))
+    }, posts)
     return (
         <div>
             <TopBar/>
-            {posts.map((item, index) => {
-                return <Post/>
+            <div style={{"display":"flex", "flexDirection":"column", alignItems:"center"}}>
+            {posts.map((post) => {
+                return <Post post={post}/>
             })}
+            </div>
+            
         </div>
     )
 }
