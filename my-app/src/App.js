@@ -1,17 +1,19 @@
-import './App.css';
-import React from 'react';
+import "./App.css";
+import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Main from './pages/Main';
-import Profile from './pages/Profile';
-
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Main from "./pages/Main";
+import Profile from "./pages/Profile";
 
 function App() {
+  // should be null at the very beginning
+  const loggedInUser = { username: "RC", id: 0 };
+  const { user, setUser } = React.useState(loggedInUser);
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Main />}/>
+        <Route path="/" element={<Main loggedInUser={loggedInUser} />} />
         <Route path="/accounts/login" element={<Login />} />
         <Route path="/accounts/create" element={<Signup />} />
         <Route path="/profile" element={<Profile />} />
@@ -20,7 +22,6 @@ function App() {
               acts like a catch-all for URLs that we don't have explicit
               routes for. */}
         <Route path="*" element={<NoMatch />} />
-        
       </Routes>
     </BrowserRouter>
   );

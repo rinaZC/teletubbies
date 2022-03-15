@@ -1,49 +1,98 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import * as React from "react";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import { red } from "@mui/material/colors";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { DeleteOutline } from "@mui/icons-material";
+import axios from "axios";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { Button } from "@mui/material";
 
 export default function Post(props) {
-  return (
-    <Card sx={{ minWidth: 500 }}>
-      <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
+  const { loggedInUser, post, getLatestPosts } = props;
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-        subheader={props.post.date}
-      />
-      <div dangerouslySetInnerHTML={{__html: props.post.music}} />
-     
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {props.post.description}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-      </CardActions>
-    </Card>
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      <Card sx={{ minWidth: 500, marginBottom: 5 }}>
+        <CardHeader
+          avatar={
+            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+              {loggedInUser.username}
+            </Avatar>
+          }
+          action={
+            loggedInUser.id == post.owner ? (
+              <IconButton aria-label="settings" onClick={handleClickOpen}>
+                <DeleteOutline />
+              </IconButton>
+            ) : (
+              <></>
+            )
+          }
+          subheader={post.date.split("T")[0]}
+        />
+        <div dangerouslySetInnerHTML={{ __html: post.music }} />
+
+        <CardContent>
+          <Typography variant="body2" color="text.secondary">
+            {post.description}
+          </Typography>
+        </CardContent>
+        <CardActions disableSpacing>
+          <IconButton aria-label="add to favorites">
+            <FavoriteIcon />
+          </IconButton>
+        </CardActions>
+      </Card>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Are you sure you want to delete this post?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You can not undo this action.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={() => {
+              axios
+                .delete(`/api/posts/${post.id}`)
+                .then((res) => {
+                  getLatestPosts();
+                })
+                .catch((err) => console.log(err));
+              handleClose();
+            }}
+            autoFocus
+          >
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 }
