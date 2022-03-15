@@ -1,13 +1,7 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import viewsets
 from .serializers import AccountsSerializer
 from .models import Accounts
-from rest_framework.response import Response
-from django.shortcuts import redirect
-from .forms import SignForm
-from rest_framework.decorators import action
-from django.contrib import messages
 from django.http import JsonResponse
 import logging
 logger = logging.getLogger(__name__)
@@ -28,13 +22,25 @@ class AccountsView(viewsets.ModelViewSet):
                                      'message': 'Account creation failed. Already existed !!!'}, status=400)
 
         elif request.data.get('operation') == 'login':
-            if login(request):
+            if request.session.get('username'):
+                return JsonResponse({'result': 'Success',
+                                     'message': 'Already login! Redirect to Main page...'}, status=200)
+            elif login(request):
                 return JsonResponse({'result': 'Success',
                                      'message': 'Login successfully! Redirect to Main page...'}, status=200)
             else:
                 return JsonResponse({'result': 'Failed',
                                      'message': 'Login Failed! Cannot find correct username or password. '
                                      'Maybe sign up first?'}, status=400)
+        elif request.data.get('operation') == 'logout':
+            if logout(request):
+                msg = "Account: " + request.data.get('username') + " logout successfully! Redirect to Login page..."
+                return JsonResponse({'result': 'Success',
+                                     'message': msg}, status=200)
+            else:
+                return JsonResponse({'result': 'Failed',
+                                     'message': 'Session not find.'}, status=400)
+
         else:
             return JsonResponse({'result': 'Failed',
                                  'message': 'Unrecognized account operation !!!'}, status=400)
@@ -58,10 +64,18 @@ def login(request):
     password = request.data.get('password')
     _vals = {'username': name, 'password': password}
     if Accounts.objects.filter(**_vals):
+        request.session['username'] = name
         return True
     else:
         return False
 
+
+def logout(request):
+    if request.session.get('username'):
+        del request.session['username']
+        return True
+    else:
+        return False
 
 
 
