@@ -1,13 +1,15 @@
 import React from 'react';
 import "./Login.css"
 import logo from '../static/images/login.png';
+import axios from "axios";
 
 const sign_up_json = {
     operation: "create",
     username: "",
     password: "",
     email: "",
-    favorite: ""
+    favorite: "",
+    completed: true
 };
 
 class FluidInput extends React.Component {
@@ -78,18 +80,7 @@ class FluidInput extends React.Component {
 class Button extends React.Component {
     handleButtonClicked(event) {
         event.preventDefault();
-        const { url } = this.props;
-        console.log(sign_up_json);
-        fetch(`${url}accounts/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(sign_up_json),
-        })
-          .then((response) => {
-            if (!response.ok) throw Error(response.statusText);
-            return response.json();
-          })
-          .catch((error) => console.log(error));
+        axios.post("/api/accounts/", sign_up_json)
     }
 
   render() {

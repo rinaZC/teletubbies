@@ -1,6 +1,14 @@
 import React from 'react';
 import "./Login.css"
 import logo from '../static/images/login.png';
+import axios from "axios";
+
+const login_json = {
+    operation: "login",
+    username: "",
+    password: ""
+};
+
 
 class FluidInput extends React.Component {
   constructor(props) {
@@ -56,11 +64,15 @@ class FluidInput extends React.Component {
 
 
 class Button extends React.Component {
+    handleButtonClicked(event) {
+        event.preventDefault();
+        axios.post("/api/accounts/", login_json)
+    }
   render() {
     return /*#__PURE__*/(
       React.createElement("div", {
         className: `button ${this.props.buttonClass}`,
-        onClick: this.props.onClick },
+        onClick: this.handleButtonClicked.bind(this)  },
 
       this.props.buttonText));
 
