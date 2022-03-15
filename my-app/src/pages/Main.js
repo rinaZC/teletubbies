@@ -46,13 +46,15 @@ function TopBar() {
     );
   }
 
-// let posts = [{"id": 1, "music": "<iframe style=\"border-radius:12px\" src=\"https://open.spotify.com/embed/track/0ri0Han4IRJhzvERHOZTMr?utm_source=generator\" width=\"100%\" height=\"380\" frameBorder=\"0\" allowfullscreen=\"\" allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\"></iframe>", "description": "Love this song!"}]
+let testpost = {"id": 1, "music": "<iframe style=\"border-radius:12px\" src=\"https://open.spotify.com/embed/track/0ri0Han4IRJhzvERHOZTMr?utm_source=generator\" width=\"100%\" height=\"380\" frameBorder=\"0\" allowfullscreen=\"\" allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\"></iframe>", "description": "Love this song!"}
 
 
 export default function Main() {
     const [posts, setPosts] = React.useState([])
     React.useEffect(() => {
       axios.get("/api/posts/").then((res)=>setPosts(res.data)).catch((err)=>console.log(err))
+      // axios.post("/api/posts/", testpost).then(res => {}).catch(err => console.log(err))
+
     }, posts)
     return (
         <div>
