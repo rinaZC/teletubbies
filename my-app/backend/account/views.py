@@ -28,7 +28,8 @@ class AccountsView(viewsets.ModelViewSet):
                                      'message': 'Already login! Redirect to Main page...'}, status=200)
             elif login(request):
                 return JsonResponse({'result': 'Success',
-                                     'message': 'Login successfully! Redirect to Main page...'}, status=200)
+                                     'message': 'Login successfully! Redirect to Main page...',
+                                     'id': request.session.get('id')}, status=200)
             else:
                 return JsonResponse({'result': 'Failed',
                                      'message': 'Login Failed! Cannot find correct username or password. '
@@ -66,6 +67,8 @@ def login(request):
     _vals = {'username': name, 'password': password}
     if Accounts.objects.filter(**_vals):
         request.session['username'] = name
+        user = Accounts.objects.get(username=name)
+        request.session['id'] = user.id
         return True
     else:
         return False
