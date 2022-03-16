@@ -1,7 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import "./Login.css"
 import logo from '../static/images/login.png';
 import axios from "axios";
+import {
+  Route,
+  Navigate,
+} from 'react-router-dom';
 
 const login_json = {
     operation: "login",
@@ -70,51 +74,61 @@ class FluidInput extends React.Component {
   }}
 
 
-class Button extends React.Component {
-    handleButtonClicked(event) {
-        event.preventDefault();
-        axios.post("/api/accounts/", login_json)
-            .then(response=>
-                console.log(response.data)
-            )
-            .catch(err=>
-                console.log(err)
-            )
-    }
-  render() {
-    return /*#__PURE__*/(
-      React.createElement("div", {
-        className: `button ${this.props.buttonClass}`,
-        onClick: this.handleButtonClicked.bind(this)  },
 
-      this.props.buttonText));
+function Form() {
+    const [isLogin, setIsLogin] = useState(false);
 
+    function HandleSubmit(e) {
+    e.preventDefault();
+    console.log('You clicked submit.');
 
-  }}
+    const sendPostRequest = async () => {
+        try {
+            const resp = await axios.post('/api/accounts/', login_json);
+            console.log(resp.data);
+            if (resp.data.result === 'Success') {
+                setIsLogin(true);
+            }
+            else{
+                alert(resp.data.message);
+            }
+        } catch (err) {
+        // Handle Error Here
+            console.error(err);
+        }};
+    sendPostRequest();
+  }
+
+  return (
+    <form onSubmit={HandleSubmit}>
+        <div className={'loginButtonWrapper'}>
+            <button className={'login-button'} type="submit">Login</button>
+            {isLogin ? <Navigate to={'/'} /> : null}
+        </div>
+    </form>
+  );
+}
 
 
 class Login extends React.Component {
+
   render() {
     const style = {
       margin: "15px 0" };
 
-    return /*#__PURE__*/(
-      React.createElement("div", { className: "login-container" },
-      React.createElement("img",
-          {src: logo, width: 95, height: 95},
-          null),
-      React.createElement("div", { className: "title" }, "Login"),
-      React.createElement(FluidInput, { type: "username", label: "username", id: "username", style: style }),
-      React.createElement(FluidInput, {
-        type: "password",
-        label: "password",
-        id: "password",
-        style: style }), /*#__PURE__*/
-
-      React.createElement(Button, { buttonText: "log in", buttonClass: "login-button" }),
-      React.createElement("p",{}, "No account?"),
-      React.createElement('a',{href: "/accounts/create/"}, "Sign up here!")
-      ));
+    return (
+        <div className={"login-container"}>
+            <span>
+                <img src={ logo } alt={'Logo'} width={"95"} height={"95"}/>
+            </span>
+            <div className={"title"}>Login</div>
+            <FluidInput type={"username"} label={"username"} id={"username"} style={style}></FluidInput>
+            <FluidInput type={"password"} label={"password"} id={"password"} style={style}></FluidInput>
+            <Form/>
+            <p>No account?</p>
+            <a href={"/accounts/create/"}> Sign up here! </a>
+        </div>
+      );
   }}
 
 export default Login;

@@ -1,7 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import "./Login.css"
 import logo from '../static/images/login.png';
 import axios from "axios";
+import {
+  Route,
+  Navigate,
+} from 'react-router-dom';
 
 const sign_up_json = {
     operation: "create",
@@ -77,22 +81,41 @@ class FluidInput extends React.Component {
   }}
 
 
-class Button extends React.Component {
-    handleButtonClicked(event) {
-        event.preventDefault();
-        axios.post("/api/accounts/", sign_up_json)
-    }
-
-  render() {
-    return /*#__PURE__*/(
-      React.createElement("div", {
-        className: `button ${this.props.buttonClass}`,
-        onClick: this.handleButtonClicked.bind(this) },
-
-      this.props.buttonText));
+function Form() {
+    const [isLogin, setIsLogin] = useState(false);
 
 
-  }}
+    function HandleSubmit(e) {
+    e.preventDefault();
+    console.log('You clicked submit.');
+
+    const sendPostRequest = async () => {
+        try {
+            const resp = await axios.post('/api/accounts/', sign_up_json);
+            console.log(resp.data);
+            if (resp.data.result === 'Success') {
+                alert(resp.data.message)
+                setIsLogin(true);
+            }
+            else{
+                alert(resp.data.message)
+            }
+        } catch (err) {
+        // Handle Error Here
+            console.error(err);
+        }};
+    sendPostRequest();
+  }
+
+  return (
+    <form onSubmit={HandleSubmit}>
+        <div className={'loginButtonWrapper'}>
+            <button className={'login-button'} type="submit">Login</button>
+            {isLogin ? <Navigate to={'/accounts/login'} /> : null}
+        </div>
+    </form>
+  );
+}
 
 
 class Signup extends React.Component {
@@ -115,7 +138,7 @@ class Signup extends React.Component {
 
       React.createElement(FluidInput, { type: "email", label: "email", id: "email", style: style}),
       React.createElement(FluidInput, { type: "favorite", label: "favorite music genre", id: "favorite", style: style }),
-      React.createElement(Button, { buttonText: "sign up", buttonClass: "login-button" }),
+      React.createElement(Form),
       React.createElement("p",{}, "Already had an account?"),
       React.createElement('a',{href: "/accounts/login/"}, "Login in here!")
       ));
