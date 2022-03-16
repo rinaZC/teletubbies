@@ -18,13 +18,16 @@ from django.urls import path, include
 from rest_framework import routers
 from post import views as pv
 from account import views as av
+from uprofile import views as uv
 
 router = routers.DefaultRouter()
 router.register(r'posts', pv.PostView, 'post')
 router.register(r'accounts', av.AccountsView, 'account')
+router.register(r'uprofiles', uv.UprofileView, 'uprofile')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include(router.urls)),
     path('api/', include(router.urls)),
+    path('uprofile/', include(router.urls)),
 ]
