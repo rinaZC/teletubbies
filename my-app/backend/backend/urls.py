@@ -27,7 +27,5 @@ router.register(r'uprofiles', uv.UprofileView, 'uprofile')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include(router.urls)),
     path('api/', include(router.urls)),
-    path('uprofile/', include(router.urls)),
 ]
