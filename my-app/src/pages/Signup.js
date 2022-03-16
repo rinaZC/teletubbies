@@ -110,7 +110,7 @@ function Form() {
   return (
     <form onSubmit={HandleSubmit}>
         <div className={'loginButtonWrapper'}>
-            <button className={'login-button'} type="submit">Login</button>
+            <button className={'login-button'} type="submit">Sign Up</button>
             {isLogin ? <Navigate to={'/accounts/login'} /> : null}
         </div>
     </form>
@@ -124,24 +124,21 @@ class Signup extends React.Component {
       margin: "15px 0" };
 
     return /*#__PURE__*/(
-      React.createElement("div", { className: "login-container" },
-      React.createElement("img",
-          {src: logo, width: 95, height: 95},
-          null),
-      React.createElement("div", { className: "title" }, "Sign Up"),
-      React.createElement(FluidInput, { type: "username", label: "username", id: "username", style: style} ),
-      React.createElement(FluidInput, {
-        type: "password",
-        label: "password",
-        id: "password",
-        style: style }), /*#__PURE__*/
-
-      React.createElement(FluidInput, { type: "email", label: "email", id: "email", style: style}),
-      React.createElement(FluidInput, { type: "favorite", label: "favorite music genre", id: "favorite", style: style }),
-      React.createElement(Form),
-      React.createElement("p",{}, "Already had an account?"),
-      React.createElement('a',{href: "/accounts/login/"}, "Login in here!")
-      ));
+        <div className={"login-container"}>
+            <span>
+                <img src={ logo } alt={'Logo'} width={"95"} height={"95"}/>
+            </span>
+            <div className={"title"}>Sign Up</div>
+            <FluidInput type={"username"} label={"username"} id={"username"} style={style}></FluidInput>
+            <FluidInput type={"password"} label={"password"} id={"password"} style={style}></FluidInput>
+            <FluidInput type={"email"} label={"email"} id={"email"} style={style}></FluidInput>
+            <FluidInput type={"favorite"} label={"favorite"} id={"favorite"} style={style}></FluidInput>
+            <Form/>
+            <br/>
+            <p>Already had an account?</p>
+            <a href={"/accounts/login/"}> Login in here! </a>
+        </div>
+    );
   }}
 
 export default Signup;
