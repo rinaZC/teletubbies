@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import "./Login.css"
+import "./Login.css";
 import logo from '../static/images/login.png';
 import axios from "axios";
 import {
   Route,
   Navigate,
 } from 'react-router-dom';
+import Cookies from 'js-cookie'
 
 const login_json = {
     operation: "login",
@@ -87,7 +88,9 @@ function Form() {
             const resp = await axios.post('/api/accounts/', login_json);
             console.log(resp.data);
             if (resp.data.result === 'Success') {
+                Cookies.set('id', resp.data.id)
                 setIsLogin(true);
+                console.log('Cookie:', Cookies.get('id'));
             }
             else{
                 alert(resp.data.message);
