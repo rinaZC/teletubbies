@@ -35,6 +35,13 @@ class FluidInput extends React.Component {
     const { type, label, style, id } = this.props;
     const { focused, value } = this.state;
 
+    if(id === "username") {
+        login_json.username = value;
+    }
+    else if(id === "password") {
+        login_json.password = value;
+    }
+
     let inputClass = "fluid-input";
     if (focused) {
       inputClass += " fluid-input--focus";
@@ -67,6 +74,12 @@ class Button extends React.Component {
     handleButtonClicked(event) {
         event.preventDefault();
         axios.post("/api/accounts/", login_json)
+            .then(response=>
+                console.log(response.data)
+            )
+            .catch(err=>
+                console.log(err)
+            )
     }
   render() {
     return /*#__PURE__*/(

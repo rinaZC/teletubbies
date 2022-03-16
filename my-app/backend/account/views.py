@@ -19,7 +19,7 @@ class AccountsView(viewsets.ModelViewSet):
                                      'message': 'Sign up successfully! Redirect to Login page...'}, status=200)
             else:
                 return JsonResponse({'result': 'Failed',
-                                     'message': 'Account creation failed. Already existed !!!'}, status=400)
+                                     'message': 'Account creation failed. Already existed !!!'}, status=201)
 
         elif request.data.get('operation') == 'login':
             if request.session.get('username'):
@@ -31,7 +31,7 @@ class AccountsView(viewsets.ModelViewSet):
             else:
                 return JsonResponse({'result': 'Failed',
                                      'message': 'Login Failed! Cannot find correct username or password. '
-                                     'Maybe sign up first?'}, status=400)
+                                     'Maybe sign up first?'}, status=201)
         elif request.data.get('operation') == 'logout':
             if logout(request):
                 msg = "Account: " + request.data.get('username') + " logout successfully! Redirect to Login page..."
@@ -39,11 +39,11 @@ class AccountsView(viewsets.ModelViewSet):
                                      'message': msg}, status=200)
             else:
                 return JsonResponse({'result': 'Failed',
-                                     'message': 'Session not find.'}, status=400)
+                                     'message': 'Session not find.'}, status=201)
 
         else:
             return JsonResponse({'result': 'Failed',
-                                 'message': 'Unrecognized account operation !!!'}, status=400)
+                                 'message': 'Unrecognized account operation !!!'}, status=201)
 
 
 def sign_up(request):
