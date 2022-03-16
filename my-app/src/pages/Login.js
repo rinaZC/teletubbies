@@ -125,6 +125,7 @@ class Login extends React.Component {
             <FluidInput type={"username"} label={"username"} id={"username"} style={style}></FluidInput>
             <FluidInput type={"password"} label={"password"} id={"password"} style={style}></FluidInput>
             <Form/>
+            <br/>
             <p>No account?</p>
             <a href={"/accounts/create/"}> Sign up here! </a>
         </div>
