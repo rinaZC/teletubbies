@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 from rest_framework import viewsets
 from .serializers import AccountsSerializer
 from .models import Accounts
@@ -76,7 +77,3 @@ def logout(request):
         return True
     else:
         return False
-
-
-
-
