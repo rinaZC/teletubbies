@@ -6,7 +6,7 @@ class Post(models.Model):
     # iframe code for now
     music = models.TextField()
     description = models.TextField()
-    owner = models.IntegerField(default=0)
+    owner = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True)
 
     # def _str_(self):

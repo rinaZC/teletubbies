@@ -1,19 +1,17 @@
-import React, {useState} from 'react';
-import "./Login.css"
-import logo from '../static/images/login.png';
+import React, { useState } from "react";
+import "./Login.css";
+import logo from "../static/images/login.png";
 import axios from "axios";
-import {
-  Route,
-  Navigate,
-} from 'react-router-dom';
+import { Navigate } from "react-router-dom";
+import { Typography } from "@mui/material";
 
 const sign_up_json = {
-    operation: "create",
-    username: "",
-    password: "",
-    email: "",
-    favorite: "",
-    completed: true
+  operation: "create",
+  username: "",
+  password: "",
+  email: "",
+  favorite: "",
+  completed: true,
 };
 
 class FluidInput extends React.Component {
@@ -21,36 +19,33 @@ class FluidInput extends React.Component {
     super(props);
     this.state = {
       focused: false,
-      value: "" };
-
+      value: "",
+    };
   }
   focusField() {
     const { focused } = this.state;
     this.setState({
-      focused: !focused });
-
+      focused: !focused,
+    });
   }
   handleChange(event) {
     const { target } = event;
     const { value } = target;
     this.setState({
-      value: value });
-
+      value: value,
+    });
   }
   render() {
     const { type, label, style, id } = this.props;
     const { focused, value } = this.state;
-    if(id === "username") {
-        sign_up_json.username = value;
-    }
-    else if(id === "password") {
-        sign_up_json.password = value;
-    }
-    else if(id === "email") {
-        sign_up_json.email = value;
-    }
-    else if(id === "favorite") {
-        sign_up_json.favorite = value;
+    if (id === "username") {
+      sign_up_json.username = value;
+    } else if (id === "password") {
+      sign_up_json.password = value;
+    } else if (id === "email") {
+      sign_up_json.email = value;
+    } else if (id === "favorite") {
+      sign_up_json.favorite = value;
     }
 
     let inputClass = "fluid-input";
@@ -60,85 +55,132 @@ class FluidInput extends React.Component {
       inputClass += " fluid-input--open";
     }
 
-    return /*#__PURE__*/(
-      React.createElement("div", { className: inputClass, style: style }, /*#__PURE__*/
-      React.createElement("div", { className: "fluid-input-holder" }, /*#__PURE__*/
-      React.createElement("input", {
-        className: "fluid-input-input",
-        type: type,
-        id: id,
-        onFocus: this.focusField.bind(this),
-        onBlur: this.focusField.bind(this),
-        onChange: this.handleChange.bind(this),
-        autoComplete: "off" }), /*#__PURE__*/
+    return /*#__PURE__*/ React.createElement(
+      "div",
+      { className: inputClass, style: style } /*#__PURE__*/,
+      React.createElement(
+        "div",
+        { className: "fluid-input-holder" } /*#__PURE__*/,
+        React.createElement("input", {
+          className: "fluid-input-input",
+          type: type,
+          id: id,
+          onFocus: this.focusField.bind(this),
+          onBlur: this.focusField.bind(this),
+          onChange: this.handleChange.bind(this),
+          autoComplete: "off",
+        }) /*#__PURE__*/,
 
-      React.createElement("label", { className: "fluid-input-label" },
-      label))));
-
-
-
-
-  }}
-
+        React.createElement("label", { className: "fluid-input-label" }, label)
+      )
+    );
+  }
+}
 
 function Form() {
-    const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
-
-    function HandleSubmit(e) {
+  function HandleSubmit(e) {
     e.preventDefault();
-    console.log('You clicked submit.');
+    console.log("You clicked submit.");
 
     const sendPostRequest = async () => {
-        try {
-            const resp = await axios.post('/api/accounts/', sign_up_json);
-            console.log(resp.data);
-            if (resp.data.result === 'Success') {
-                alert(resp.data.message)
-                setIsLogin(true);
-            }
-            else{
-                alert(resp.data.message)
-            }
-        } catch (err) {
+      try {
+        const resp = await axios.post("/api/accounts/", sign_up_json);
+
+        console.log(resp.data);
+        if (resp.data.result === "Success") {
+          // create uprofile
+          axios
+            .post("/api/uprofiles/", {
+              username: sign_up_json.username,
+              password: sign_up_json.password,
+              email: sign_up_json.email,
+              favorite: "",
+              bios: "",
+              pronouns: "",
+              artist: "",
+            })
+            .then(() => {
+              alert(resp.data.message);
+              setIsLogin(true);
+            })
+            .catch((err) => console.log(err));
+        } else {
+          alert(resp.data.message);
+        }
+      } catch (err) {
         // Handle Error Here
-            console.error(err);
-        }};
+        console.error(err);
+      }
+    };
     sendPostRequest();
   }
 
   return (
     <form onSubmit={HandleSubmit}>
-        <div className={'loginButtonWrapper'}>
-            <button className={'login-button'} type="submit">Sign Up</button>
-            {isLogin ? <Navigate to={'/accounts/login'} /> : null}
-        </div>
+      <div className={"loginButtonWrapper"}>
+        <button className={"login-button"} type="submit">
+          Sign Up
+        </button>
+        {isLogin ? <Navigate to={"/accounts/login"} /> : null}
+      </div>
     </form>
   );
 }
 
-
 class Signup extends React.Component {
   render() {
     const style = {
-      margin: "15px 0" };
+      margin: "15px 0",
+    };
 
-    return /*#__PURE__*/(
+    return (
+      /*#__PURE__*/ <div>
+        <Typography
+          variant="h4"
+          color={"gray"}
+          sx={{ margin: 3, textAlign: "center" }}
+        >
+          WELCOME TO MUSIC AGER
+        </Typography>
         <div className={"login-container"}>
-            <span>
-                <img src={ logo } alt={'Logo'} width={"95"} height={"95"}/>
-            </span>
-            <div className={"title"}>Sign Up</div>
-            <FluidInput type={"username"} label={"username"} id={"username"} style={style}></FluidInput>
-            <FluidInput type={"password"} label={"password"} id={"password"} style={style}></FluidInput>
-            <FluidInput type={"email"} label={"email"} id={"email"} style={style}></FluidInput>
-            <FluidInput type={"favorite"} label={"favorite"} id={"favorite"} style={style}></FluidInput>
-            <Form/>
-            <br/>
-            <p>Already had an account?</p>
-            <a href={"/accounts/login/"}> Login in here! </a>
+          <span>
+            <img src={logo} alt={"Logo"} width={"95"} height={"95"} />
+          </span>
+          <div className={"title"}>Sign Up</div>
+          <FluidInput
+            type={"username"}
+            label={"username"}
+            id={"username"}
+            style={style}
+          ></FluidInput>
+          <FluidInput
+            type={"password"}
+            label={"password"}
+            id={"password"}
+            style={style}
+          ></FluidInput>
+          <FluidInput
+            type={"email"}
+            label={"email"}
+            id={"email"}
+            style={style}
+          ></FluidInput>
+          <FluidInput
+            type={"favorite"}
+            label={"favorite music genre"}
+            id={"favorite"}
+            style={style}
+          ></FluidInput>
+          <Form />
+          <br />
+          <p>Already had an account?</p>
+          <a href={"/accounts/login/"}> Login in here! </a>
         </div>
+      </div>
     );
-  }}
+  }
+}
 
 export default Signup;

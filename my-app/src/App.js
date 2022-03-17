@@ -8,12 +8,10 @@ import Profile from "./pages/Profile";
 
 function App() {
   // should be null at the very beginning
-  const loggedInUser = { username: "RC", id: 0 };
-  const { user, setUser } = React.useState(loggedInUser);
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Main loggedInUser={loggedInUser} />} />
+        <Route path="/" element={<Main />} />
         <Route path="/accounts/login" element={<Login />} />
         <Route path="/accounts/create" element={<Signup />} />
         <Route path="/profile" element={<Profile />} />

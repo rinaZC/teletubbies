@@ -10,8 +10,10 @@ import Refresh from "@mui/icons-material/Refresh";
 import AddBox from "@mui/icons-material/AddBox";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
-import { Grid, Button, TextField } from "@mui/material";
+import { Grid, Button, TextField, Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
+import { InfoRounded } from "@mui/icons-material";
 
 const boxStyle = {
   position: "absolute",
@@ -28,7 +30,13 @@ const boxStyle = {
 function TopBar(props) {
   // modal state
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    if (!Cookies.get("id")) {
+      alert("Please sign in first.");
+      return;
+    }
+    setOpen(true);
+  };
   const handleClose = () => {
     props.getLatestPosts();
     setOpen(false);
@@ -38,6 +46,7 @@ function TopBar(props) {
   const defaultValues = {
     music: "",
     description: "",
+    owner: Cookies.get("id"),
   };
   const [formValues, setFormValues] = React.useState(defaultValues);
   const handleInputChange = (e) => {
@@ -94,6 +103,9 @@ function TopBar(props) {
                   value={formValues.music}
                   onChange={handleInputChange}
                 />
+                <Tooltip title="Please copy and paste embed track code from Spotify for the best result. ">
+                  <InfoRounded />
+                </Tooltip>
               </Grid>
               <Grid item>
                 <TextField
@@ -116,9 +128,11 @@ function TopBar(props) {
       </Modal>
       <AppBar position="sticky">
         <Toolbar sx={{ backgroundColor: "gray" }}>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            App Name
-          </Typography>
+          <Link to={"/"} style={{ color: "white", flexGrow: 1 }}>
+            <Typography variant="h6" component="div">
+              MUSIC AGER
+            </Typography>
+          </Link>
 
           <IconButton size="large" color="inherit">
             <Refresh />
@@ -128,12 +142,21 @@ function TopBar(props) {
             <AddBox />
             <Typography variant="button">Make A Post</Typography>
           </IconButton>
-          <Link to={"/profile"} style={{ color: "white" }}>
-            <IconButton size="large" color="inherit">
-              <AccountCircle />
-              <Typography variant="button">Profile</Typography>
-            </IconButton>
-          </Link>
+          {Cookies.get("id") ? (
+            <Link to={"/profile"} style={{ color: "white" }}>
+              <IconButton size="large" color="inherit">
+                <AccountCircle />
+                <Typography variant="button">Profile</Typography>
+              </IconButton>
+            </Link>
+          ) : (
+            <Link to={"/accounts/login"} style={{ color: "white" }}>
+              <IconButton size="large" color="inherit">
+                <AccountCircle />
+                <Typography variant="button">Login</Typography>
+              </IconButton>
+            </Link>
+          )}
         </Toolbar>
       </AppBar>
     </Box>
@@ -141,7 +164,7 @@ function TopBar(props) {
 }
 
 export default function Main(props) {
-  const { loggedInUser } = props;
+  const loggedInUserId = Cookies.get("id");
   const [posts, setPosts] = React.useState([]);
   const getLatestPosts = () => {
     axios
@@ -168,7 +191,7 @@ export default function Main(props) {
             <Post
               post={post}
               getLatestPosts={getLatestPosts}
-              loggedInUser={loggedInUser}
+              loggedInUserId={loggedInUserId}
             />
           );
         })}

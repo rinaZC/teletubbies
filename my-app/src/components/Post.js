@@ -18,7 +18,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Button } from "@mui/material";
 
 export default function Post(props) {
-  const { loggedInUser, post, getLatestPosts } = props;
+  const { loggedInUserId, post, getLatestPosts } = props;
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -27,6 +27,12 @@ export default function Post(props) {
   const handleClose = () => {
     setOpen(false);
   };
+  const [ownerName, setOwnerName] = React.useState("");
+  React.useEffect(() => {
+    axios.get(`/api/accounts/${post.owner}`).then((resp) => {
+      setOwnerName(resp.data.username).catch((err) => console.log(err));
+    });
+  }, [props.post.owner]);
 
   return (
     <div>
@@ -34,11 +40,11 @@ export default function Post(props) {
         <CardHeader
           avatar={
             <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              {loggedInUser.username}
+              {post.ownerName}
             </Avatar>
           }
           action={
-            loggedInUser.id == post.owner ? (
+            loggedInUserId == post.owner ? (
               <IconButton aria-label="settings" onClick={handleClickOpen}>
                 <DeleteOutline />
               </IconButton>
@@ -46,7 +52,12 @@ export default function Post(props) {
               <></>
             )
           }
-          subheader={post.date.split("T")[0]}
+          subheader={
+            <div>
+              <p>{ownerName}</p>
+              {post.date.split("T")[0]}
+            </div>
+          }
         />
         <div dangerouslySetInnerHTML={{ __html: post.music }} />
 
