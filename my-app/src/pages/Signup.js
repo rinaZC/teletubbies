@@ -87,28 +87,32 @@ function Form() {
     const sendPostRequest = async () => {
       try {
         const resp = await axios.post("/api/accounts/", sign_up_json);
-
         console.log(resp.data);
+        alert(resp.data.message);
         if (resp.data.result === "Success") {
-          // create uprofile
-          axios
-            .post("/api/uprofiles/", {
-              username: sign_up_json.username,
-              password: sign_up_json.password,
-              email: sign_up_json.email,
-              favorite: "",
-              bios: "",
-              pronouns: "",
-              artist: "",
-            })
-            .then(() => {
-              alert(resp.data.message);
-              setIsLogin(true);
-            })
-            .catch((err) => console.log(err));
-        } else {
-          alert(resp.data.message);
+          setIsLogin(true);
         }
+
+        //if (resp.data.result !== "Success") {
+        //   // create uprofile
+        //   axios
+        //     .post("/api/uprofiles/", {
+        //       username: sign_up_json.username,
+        //       password: sign_up_json.password,
+        //       email: sign_up_json.email,
+        //       favorite: "",
+        //       bios: "",
+        //       pronouns: "",
+        //       artist: "",
+        //     })
+        //     .then(() => {
+        //       alert(resp.data.message);
+        //       setIsLogin(true);
+        //     })
+        //     .catch((err) => console.log(err));
+        // } else {
+
+        //}
       } catch (err) {
         // Handle Error Here
         console.error(err);
