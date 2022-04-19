@@ -17,6 +17,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Button } from "@mui/material";
 
+var filter = require('leo-profanity');
+filter.loadDictionary();
+
 export default function Post(props) {
   const { loggedInUserId, post, getLatestPosts } = props;
   const [open, setOpen] = React.useState(false);
@@ -63,7 +66,7 @@ export default function Post(props) {
 
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            {post.description}
+            {filter.clean(post.description)}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
