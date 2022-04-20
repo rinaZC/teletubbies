@@ -136,7 +136,7 @@ export default function Profile() {
                 <TextField
                   id="bios-input"
                   name="bios"
-                  label={user.bios}
+                  label="bios"
                   type="text"
                   value={user.bios}
                   onChange={handleInputChange}
