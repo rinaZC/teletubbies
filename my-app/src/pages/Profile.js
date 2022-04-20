@@ -71,8 +71,13 @@ export default function Profile() {
 
 
   const defaultValues = {
-    ...user,
+    //...user,
+    operation: 'edit',
     owner: Cookies.get("id"),
+    favorite: null,
+    bios: null,
+    pronouns: null,
+    artist: null,
   };
   const [formValues, setFormValues] = React.useState(defaultValues);
   const handleInputChange = (e) => {
@@ -88,7 +93,7 @@ export default function Profile() {
 
     //make api call here
     axios
-      .put("/api/posts/", formValues)
+      .post("/api/accounts/", formValues)
       .then((res) => {})
       .catch((err) => console.log(err));
 
@@ -218,6 +223,15 @@ export default function Profile() {
             <h5>Favorite Artist(s): {user.artist}</h5>
           </div>
         </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <h1>My Posts</h1><br/><br/>
       </div>
       <div
         style={{
