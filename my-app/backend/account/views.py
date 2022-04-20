@@ -5,7 +5,10 @@ from .serializers import AccountsSerializer
 from .models import Accounts
 from django.http import JsonResponse
 import logging
+
 logger = logging.getLogger(__name__)
+
+
 # Create your views here.
 
 
@@ -33,7 +36,7 @@ class AccountsView(viewsets.ModelViewSet):
             else:
                 return JsonResponse({'result': 'Failed',
                                      'message': 'Login Failed! Cannot find correct username or password. '
-                                     'Maybe sign up first?'}, status=201)
+                                                'Maybe sign up first?'}, status=201)
         elif request.data.get('operation') == 'logout':
             if logout(request):
                 msg = "Account: " + request.data.get('username') + " logout successfully! Redirect to Login page..."
@@ -42,6 +45,18 @@ class AccountsView(viewsets.ModelViewSet):
             else:
                 return JsonResponse({'result': 'Failed',
                                      'message': 'Session not find.'}, status=201)
+
+        elif request.data.get('operation') == 'edit':
+            if request.session.get('username'):
+                if edit_user(request):
+                    return JsonResponse({'result': 'Success',
+                                         'message': 'Profile Update Success !'}, status=200)
+                else:
+                    return JsonResponse({'result': 'Failed',
+                                         'message': 'Incorrect Account !!!'}, status=201)
+            else:
+                return JsonResponse({'result': 'Failed',
+                                     'message': 'Incorrect Account !!!'}, status=201)
 
         else:
             return JsonResponse({'result': 'Failed',
@@ -77,6 +92,21 @@ def login(request):
 def logout(request):
     if request.session.get('username'):
         del request.session['username']
+        return True
+    else:
+        return False
+
+
+def edit_user(request):
+    user_id = request.data.get('owner')
+    favorite = request.data.get('favorite')
+    bios = request.data.get('bios')
+    pronouns = request.data.get('pronouns')
+    artist = request.data.get('artist')
+
+    account_obj = Accounts.objects.filter(pk=user_id)
+    if account_obj:
+        account_obj.update(favorite=favorite, bios=bios, pronouns=pronouns, artist=artist)
         return True
     else:
         return False
