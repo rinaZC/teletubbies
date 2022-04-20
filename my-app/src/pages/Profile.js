@@ -41,7 +41,7 @@ export default function Profile() {
     setOpen(false);
   };
 
-  
+
   const [user, setUser] = React.useState({
     username: null,
     email: null,
@@ -172,7 +172,6 @@ export default function Profile() {
         </Box>
       </Modal>
 
-      // fengge
       <Box sx={{ flexGrow: 1, marginBottom: 3 }}>
         <AppBar position="sticky">
           <Toolbar sx={{ backgroundColor: "gray" }}>
@@ -207,7 +206,7 @@ export default function Profile() {
         <div style={{ marginLeft: "100px", paddingTop: "20px" }}>
           <div>
             <Typography>Welcome, {user.username}</Typography>
-            <IconButton>
+            <IconButton onClick={handleOpen}>
               <ModeEditOutline />
               <Typography fontSize={"15px"}>Edit Profile</Typography>
             </IconButton>
@@ -216,7 +215,7 @@ export default function Profile() {
             <h5>Pronouns: {user.pronouns}</h5>
             <h5>Bios: {user.bios}</h5>
             {/* <h5>Favorite Music Genre(s): {user.favorite}</h5> */}
-            <h5>Favorite Music Genre(s): Indie</h5>
+            <h5>Favorite Music Genre(s): {user.favorite}</h5>
             <h5>Favorite Artist(s): {user.artist}</h5>
           </div>
         </div>
