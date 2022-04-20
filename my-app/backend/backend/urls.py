@@ -18,10 +18,12 @@ from django.urls import path, include
 from rest_framework import routers
 from post import views as pv
 from account import views as av
+from comment import views as cv
 
 router = routers.DefaultRouter()
 router.register(r'posts', pv.PostView, 'post')
 router.register(r'accounts', av.AccountsView, 'account')
+router.register(r'comments', cv.CommentView, 'comment')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

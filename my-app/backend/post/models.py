@@ -8,6 +8,7 @@ class Post(models.Model):
     description = models.TextField()
     owner = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True)
+    likes = models.IntegerField(default=0)
 
     # def _str_(self):
     #     return self.title

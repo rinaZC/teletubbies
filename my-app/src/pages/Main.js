@@ -38,7 +38,6 @@ function TopBar(props) {
     setOpen(true);
   };
   const handleClose = () => {
-    props.getLatestPosts();
     setOpen(false);
   };
 
@@ -67,7 +66,11 @@ function TopBar(props) {
     //make api call here
     axios
       .post("/api/posts/", formValues)
-      .then((res) => {})
+      .then((res) => {
+        let postsCopy = props.posts.slice();
+        postsCopy.unshift(res.data);
+        props.setPosts(postsCopy);
+      })
       .catch((err) => console.log(err));
 
     setFormValues(defaultValues);
@@ -107,8 +110,10 @@ function TopBar(props) {
                   <InfoRounded />
                 </Tooltip>
               </Grid>
+
               <Grid item>
                 <TextField
+                  style={{ paddingRight: "23px" }}
                   id="description-input"
                   name="description"
                   label="Thoughts"
@@ -134,7 +139,7 @@ function TopBar(props) {
             </Typography>
           </Link>
 
-          <IconButton size="large" color="inherit">
+          <IconButton onClick={props.refreshFeeds} size="large" color="inherit">
             <Refresh />
             <Typography variant="button">Refresh My Feed</Typography>
           </IconButton>
@@ -172,13 +177,54 @@ export default function Main(props) {
       .then((res) => setPosts(res.data.sort((a, b) => b.id - a.id)))
       .catch((err) => console.log(err));
   };
+  function shuffle(array) {
+    let currentIndex = array.length,
+      randomIndex;
 
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
+    return array;
+  }
+  // const getPostComments = (post) => {
+  //   axios
+  //     .get(`/api/comments/`)
+  //     .then((resp) => {
+  //       let commentsData = [];
+  //       console.log(resp.data);
+  //       resp.data
+  //         .filter((c) => c.postID == post.id)
+  //         .forEach((c) => {
+  //           axios.get(`/api/accounts/${c.owner}`).then((userResp) => {
+  //             commentsData.push({ ...c, ownerName: userResp.data.username });
+  //           });
+  //         });
+  //       console.log(commentsData);
+  //       setComments(commentsData);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+  const refreshFeeds = (e) => {
+    e.preventDefault();
+    let postsCopy = shuffle(posts.slice());
+    console.log(postsCopy);
+    setPosts(postsCopy);
+  };
   React.useEffect(() => {
     getLatestPosts(setPosts);
   }, [posts]);
   return (
     <div>
-      <TopBar getLatestPosts={getLatestPosts} />
+      <TopBar posts={posts} setPosts={setPosts} refreshFeeds={refreshFeeds} />
       <div
         style={{
           display: "flex",
@@ -189,9 +235,11 @@ export default function Main(props) {
         {posts.map((post) => {
           return (
             <Post
+              key={post.id}
               post={post}
-              getLatestPosts={getLatestPosts}
+              getLatestPosts={(post) => getLatestPosts(post)}
               loggedInUserId={loggedInUserId}
+              // setPosts={setPosts}
             />
           );
         })}
