@@ -125,7 +125,7 @@ export default function Profile() {
                 <TextField
                   id="pronouns-input"
                   name="pronouns"
-                  label={user.pronouns}
+                  label="pronouns"
                   type="text"
                   value={user.pronouns}
                   onChange={handleInputChange}
@@ -146,7 +146,7 @@ export default function Profile() {
                 <TextField
                   id="favorite-input"
                   name="favorite"
-                  label={user.favorite}
+                  label="favorite music genre"
                   type="text"
                   value={user.favorite}
                   onChange={handleInputChange}
@@ -156,7 +156,7 @@ export default function Profile() {
                 <TextField
                   id="artist-input"
                   name="artist"
-                  label={user.artist}
+                  label="favorite artist"
                   type="text"
                   value={user.artist}
                   onChange={handleInputChange}
