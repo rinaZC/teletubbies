@@ -119,7 +119,7 @@ export default function Profile() {
               rowSpacing={3}
             >
               <Grid item>
-                <Typography>Make A Post</Typography>
+                <Typography>Edit Profile</Typography>
               </Grid>
               <Grid item>
                 <TextField
@@ -127,10 +127,9 @@ export default function Profile() {
                   name="pronouns"
                   label="pronouns"
                   type="text"
-                  value={user.pronouns}
+                  value={formValues.pronouns}
                   onChange={handleInputChange}
                 />
-
               </Grid>
               <Grid item>
                 <TextField
@@ -138,7 +137,7 @@ export default function Profile() {
                   name="bios"
                   label="bios"
                   type="text"
-                  value={user.bios}
+                  value={formValues.bios}
                   onChange={handleInputChange}
                 />
               </Grid>
@@ -148,7 +147,7 @@ export default function Profile() {
                   name="favorite"
                   label="favorite music genre"
                   type="text"
-                  value={user.favorite}
+                  value={formValues.favorite}
                   onChange={handleInputChange}
                 />
               </Grid>
@@ -158,7 +157,7 @@ export default function Profile() {
                   name="artist"
                   label="favorite artist"
                   type="text"
-                  value={user.artist}
+                  value={formValues.artist}
                   onChange={handleInputChange}
                 />
               </Grid>
