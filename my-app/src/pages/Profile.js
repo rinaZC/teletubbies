@@ -5,9 +5,6 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import Refresh from "@mui/icons-material/Refresh";
-import AddBox from "@mui/icons-material/AddBox";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
 import { Grid, Button, TextField } from "@mui/material";
@@ -15,9 +12,36 @@ import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import { ModeEditOutline } from "@mui/icons-material";
 
+const boxStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
 export default function Profile() {
   const uid = Cookies.get("id");
 
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    if (!Cookies.get("id")) {
+      alert("Please sign in first.");
+      return;
+    }
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    getLatestUserPosts(setPosts);
+    setOpen(false);
+  };
+
+  
   const [user, setUser] = React.useState({
     username: null,
     email: null,
@@ -29,7 +53,7 @@ export default function Profile() {
   //const [posts, setPosts] = React.useState([]);
   const getUserProfile = () => {
     axios
-      .get(`/api/uprofiles/${uid}`)
+      .get(`/api/accounts/${uid}`)
       .then((res) => setUser(res.data))
       .catch((err) => console.log(err));
   };
@@ -45,6 +69,33 @@ export default function Profile() {
       .catch((err) => console.log(err));
   };
 
+
+  const defaultValues = {
+    ...user,
+    owner: Cookies.get("id"),
+  };
+  const [formValues, setFormValues] = React.useState(defaultValues);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    //make api call here
+    axios
+      .put("/api/posts/", formValues)
+      .then((res) => {})
+      .catch((err) => console.log(err));
+
+    setFormValues(defaultValues);
+    handleClose();
+  };
+
   React.useEffect(() => {
     getLatestUserPosts(setPosts);
     getUserProfile(setUser);
@@ -52,6 +103,76 @@ export default function Profile() {
 
   return (
     <div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={boxStyle}>
+          <form onSubmit={handleSubmit}>
+            <Grid
+              container
+              alignItems="center"
+              justify="center"
+              direction="column"
+              rowSpacing={3}
+            >
+              <Grid item>
+                <Typography>Make A Post</Typography>
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="pronouns-input"
+                  name="pronouns"
+                  label={user.pronouns}
+                  type="text"
+                  value={user.pronouns}
+                  onChange={handleInputChange}
+                />
+
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="bios-input"
+                  name="bios"
+                  label={user.bios}
+                  type="text"
+                  value={user.bios}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="favorite-input"
+                  name="favorite"
+                  label={user.favorite}
+                  type="text"
+                  value={user.favorite}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="artist-input"
+                  name="artist"
+                  label={user.artist}
+                  type="text"
+                  value={user.artist}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item>
+                <Button variant="contained" color="primary" type="submit">
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
+      </Modal>
+
+      // fengge
       <Box sx={{ flexGrow: 1, marginBottom: 3 }}>
         <AppBar position="sticky">
           <Toolbar sx={{ backgroundColor: "gray" }}>
